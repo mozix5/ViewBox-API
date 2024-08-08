@@ -19,9 +19,9 @@ const createShow = async (req, res) => {
       return res.status(404).json({ message: "user not found" });
     }
 
-    user.watchList.push(newShow.showId);
+    user.watchList.push(newShow);
     await user.save();
-
+    
     res.status(201).json({ message: "Movie added to watchlist", newShow });
   } catch (error) {
     res.status(500).json({ message: "something went wrong" });
