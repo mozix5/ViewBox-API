@@ -4,32 +4,22 @@ const userModel = require("../models/user");
 const addToWatchList = async (req, res) => {
   const { movieId, userId, title, rating, genre, posterUrl } = req.body;
   try {
-    const movie = await movieModel.findOne({ movieId });
+    let movie = await movieModel.findOne({ movieId });
     if (!movie) {
-      const newMovie = await new movieModel({
-        user: userId,
+      movie = new movieModel({
         movieId,
         posterUrl,
         genre,
         title,
         rating,
       });
-      await newMovie.save();
+      await movie.save();
     }
 
     const user = await userModel.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: "user not found" });
+      return res.status(404).json({ message: "User not found" });
     }
-
-    const newMovie = await new movieModel({
-      user: userId,
-      movieId,
-      posterUrl,
-      genre,
-      title,
-      rating,
-    });
 
     const isMovieInWatchList = user.watchList.some((item) =>
       item.movie.equals(movie._id)
@@ -41,9 +31,9 @@ const addToWatchList = async (req, res) => {
     user.watchList.push({ movie: movie._id });
     await user.save();
 
-    res.status(201).json({ message: "Movie added to watchlist", newMovie });
+    res.status(201).json({ message: "Movie added to watchlist", movie });
   } catch (error) {
-    res.status(500).json({ message: "something went wrong" });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -55,7 +45,7 @@ const deleteMovie = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "user not found" });
     }
-    
+
     const movie = await movieModel.findOne({ movieId });
     if (!movie) {
       return res.status(404).json({ message: "movie not found" });
