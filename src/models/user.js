@@ -16,8 +16,8 @@ const UserSchema = mongoose.Schema(
     },
     watchList: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Show",
+        movie: { type: mongoose.Schema.Types.ObjectId, ref: "Movie" },
+        createdAt: { type: Date, default: Date.now },
       },
     ],
   },

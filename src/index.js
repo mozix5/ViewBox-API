@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const userRouter = require("./routes/UserRoutes");
-const showRouter = require("./routes/ShowRoutes");
+const movieRouter = require("./routes/MovieRoutes");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
@@ -11,7 +11,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use("/users", userRouter);
-app.use("/shows", showRouter);
+app.use("/movies", movieRouter);
 
 const PORT = process.env.PORT || 5000;
 
