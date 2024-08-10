@@ -87,7 +87,8 @@ const getWatchList = async (req, res) => {
       return res.status(404).json({ message: "user not found" });
     }
 
-    res.status(200).json(user.watchList);
+    const filteredWatchList = user.watchList.filter(item => item.movie !== null);
+    res.status(200).json(filteredWatchList);
   } catch (error) {
     res.status(500).json({ message: "something went wrong" });
   }
