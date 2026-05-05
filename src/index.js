@@ -8,25 +8,40 @@ const cors = require("cors");
 
 const app = express();
 
+// Database connection logic for serverless
+const connectDB = async () => {
+  if (mongoose.connections[0].readyState) return;
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("MongoDB Connected");
+  } catch (error) {
+    console.error("MongoDB Connection Error:", error);
+  }
+};
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 app.use(express.json());
+
+// Connect to DB for each request (handled by mongoose state check)
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
 app.use("/users", userRouter);
 app.use("/movies", movieRouter);
 app.use("/reviews", reviewRouter);
 
-const PORT = process.env.PORT || 5000;
-
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log("Server started on port " + PORT);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+// For local development
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running locally on port ${PORT}`);
   });
+}
+
+module.exports = app;
