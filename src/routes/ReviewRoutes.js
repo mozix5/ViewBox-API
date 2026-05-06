@@ -5,6 +5,9 @@ const reviewRouter = express.Router();
 
 reviewRouter.get("/:movieId", getReviews);
 reviewRouter.post("/", verifyToken, addReview);
-reviewRouter.post("/like/:reviewId", verifyToken, toggleLike);
+reviewRouter.post("/toggle-like/:reviewId", verifyToken, (req, res, next) => {
+  console.log("Like request received for:", req.params.reviewId);
+  next();
+}, toggleLike);
 
 module.exports = reviewRouter;
