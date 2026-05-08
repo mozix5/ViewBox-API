@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const userRouter = require("./routes/UserRoutes");
 const movieRouter = require("./routes/MovieRoutes");
 const reviewRouter = require("./routes/ReviewRoutes");
+const proxyRouter = require("./routes/ProxyRoutes");
 const cors = require("cors");
 
 const app = express();
@@ -46,6 +47,7 @@ app.use(async (req, res, next) => {
 app.use("/users", userRouter);
 app.use("/movies", movieRouter);
 app.use("/reviews", reviewRouter);
+app.use("/proxy", proxyRouter);
 
 // For local development
 if (process.env.NODE_ENV !== "production") {
